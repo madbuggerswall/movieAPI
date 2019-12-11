@@ -8,7 +8,6 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
@@ -59,6 +58,18 @@ class DatabaseManager {
 		return user;
 	}
 
+	public List<Movie> getAllMovies() {
+		return getCollection(movies, Movie.class);
+	}
+
+	public List<Director> getAllDirectors() {
+		return getCollection(directors, Director.class);
+	}
+
+	public List<User> getAllUsers() {
+		return getCollection(users, User.class);
+	}
+
 	public void addMovie(Movie movie) {
 		addDocument(movies, movie);
 	}
@@ -71,25 +82,9 @@ class DatabaseManager {
 		addDocument(users, user);
 	}
 
-	public List<Movie> findMovies(String title) {
-		List<Movie> movies = new ArrayList<Movie>();
-		for (DocumentSnapshot document : findDocuments("title", title, this.movies)) {
-			movies.add(document.toObject(Movie.class));
-		}
-		return movies;
-	}
-
-	public List<User> findUsers(String username) {
-		List<User> users = new ArrayList<User>();
-		for (DocumentSnapshot document : findDocuments("username", username, this.users)) {
-			users.add(document.toObject(User.class));
-		}
-		return users;
-	}
-
-	private List<QueryDocumentSnapshot> findDocuments(String field, String value, CollectionReference collection) {
-		Query query = collection.whereEqualTo(field, value);
-		ApiFuture<QuerySnapshot> future = query.get();
+	private <T> List<T> getCollection(CollectionReference collection, Class<T> valueType) {
+		List<T> objects = new ArrayList<T>();
+		ApiFuture<QuerySnapshot> future = collection.get();
 		List<QueryDocumentSnapshot> documents = new ArrayList<QueryDocumentSnapshot>();
 
 		try {
@@ -98,7 +93,11 @@ class DatabaseManager {
 			e.printStackTrace();
 		}
 
-		return documents;
+		for (DocumentSnapshot document : documents) {
+			objects.add(document.toObject(valueType));
+		}
+
+		return objects;
 	}
 
 	private <T> T getObjectFrom(DocumentSnapshot document, Class<T> valueType) {
@@ -109,6 +108,32 @@ class DatabaseManager {
 			System.out.println("No such document!");
 		}
 		return object;
+	}
+
+	// future.get() blocks on response.
+	private DocumentSnapshot getDocument(String docID, CollectionReference collection) {
+		DocumentReference docRef = collection.document(docID);
+		ApiFuture<DocumentSnapshot> future = docRef.get();
+		DocumentSnapshot document = null;
+
+		try {
+			document = future.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return document;
+	}
+
+	// Add a new document with auto-generated ID.
+	private void addDocument(CollectionReference collection, Object object) {
+		DocumentReference docRef = collection.document();
+		ApiFuture<WriteResult> future = docRef.set(object);
+
+		try {
+			System.out.println("Update time : " + future.get().getUpdateTime());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	// Tries to set Google Credentials from a file stream. Sets it to null if stream fails.
@@ -134,42 +159,4 @@ class DatabaseManager {
 		}
 		return credentialsStream;
 	}
-
-	// future.get() blocks on response.
-	private DocumentSnapshot getDocument(String docID, CollectionReference collection) {
-		DocumentReference docRef = collection.document(docID);
-		ApiFuture<DocumentSnapshot> future = docRef.get();
-		DocumentSnapshot document = null;
-
-		try {
-			document = future.get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return document;
-	}
-
-	// Add a new document with autp-generated ID.
-	private void addDocument(CollectionReference collection, Object object) {
-		DocumentReference docRef = collection.document();
-		ApiFuture<WriteResult> future = docRef.set(object);
-
-		try {
-			System.out.println("Update time : " + future.get().getUpdateTime());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	// Add a new document (asynchronously) in collection with id.
-	private void addDocument(String docID, CollectionReference collection, Object object) {
-		ApiFuture<WriteResult> future = collection.document(docID).set(object);
-
-		try {
-			System.out.println("Update time : " + future.get().getUpdateTime());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
 }

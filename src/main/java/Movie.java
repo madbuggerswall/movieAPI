@@ -22,6 +22,11 @@ public class Movie {
 		this.duration = duration;
 	}
 
+	public Movie(String title, int releaseYear, int duration, Director director) {
+		this(title, releaseYear, duration);
+		this.director = director;
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -32,5 +37,9 @@ public class Movie {
 
 	public int getReleaseYear() {
 		return releaseYear;
+	}
+
+	public Director getDirector() {
+		return director;
 	}
 }
