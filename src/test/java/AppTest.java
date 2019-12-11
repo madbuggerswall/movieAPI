@@ -4,9 +4,10 @@ public class AppTest {
 	public static void main(String[] args) {
 		System.out.println("Test begins...");
 		databaseManager = new DatabaseManager("credentials.json");
+		findMovies("The Godfathe");
 	}
 
-	static void addReadMovieTest() {
+	static void addReadMovie() {
 		Movie shawshank = new Movie("Shawshank Redemption", 1994, 144);
 		databaseManager.addMovie(shawshank);
 
@@ -16,7 +17,7 @@ public class AppTest {
 		System.out.println(movie.duration);
 	}
 
-	static void addUserTest() {
+	static void addUser() {
 		User user = new User("madbuggerswall");
 		user.name = "Furkan";
 		user.surname = "Bilgin";
@@ -37,5 +38,11 @@ public class AppTest {
 		user.addList(favoriteMovies);
 		user.addList(watchList);
 		databaseManager.addUser(user);
+	}
+
+	static void findMovies(String query){
+		for (Movie movie : databaseManager.findMovies(query)) {
+			System.out.println(movie.title);
+		}
 	}
 }
