@@ -1,4 +1,4 @@
-public class Movie {
+public class Movie extends Data {
 
 	String title;
 	int releaseYear;

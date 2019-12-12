@@ -24,7 +24,7 @@ class DatabaseManager {
 	CollectionReference movies;
 	CollectionReference users;
 	CollectionReference directors;
-
+	
 	// Creates the database instance.
 	public DatabaseManager(String credentialsFilePath) {
 		GoogleCredentials googleCredentials = getGoogleCredentials(credentialsFilePath);

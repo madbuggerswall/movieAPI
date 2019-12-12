@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Director {
+public class Director extends Data {
 	String name;
 	List<Movie> movies;
 

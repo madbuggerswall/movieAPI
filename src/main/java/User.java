@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User extends Data{
 	String username;
 	String name;
 	String surname;
@@ -23,7 +23,7 @@ public class User {
 		this.surname = surname;
 	}
 
-	public String getUsername(){
+	public String getUsername() {
 		return username;
 	}
 
@@ -39,7 +39,7 @@ public class User {
 		lists.add(movieList);
 	}
 
-	public void removeList(MovieList movieList){
+	public void removeList(MovieList movieList) {
 		lists.remove(movieList);
 	}
 }

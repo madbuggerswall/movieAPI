@@ -1,8 +1,9 @@
-public class AppTest {
-	static DatabaseManager databaseManager;
+import java.io.FileNotFoundException;
 
-	public static void main(String[] args) {
-		System.out.println("Test begins...");
+public class AppTest {
+	// static DatabaseManager databaseManager;
+
+	public static void main(String[] args) throws FileNotFoundException {
 		
 	}
 
