@@ -7,7 +7,7 @@ public class AppTest {
 
 	// Don't call unless database is empty.
 	static void addTopTenToDB() {
-		DatabaseManager dbManager = DatabaseManager.getInstance();
+		Database database = Database.getInstance();
 		Director darabont = new Director("Frank", "Darabont", new Date(28, 1, 1959));
 		Director coppola = new Director("Francis Ford", "Coppola", new Date(7, 4, 1939));
 		Director nolan = new Director("Christopher", "Nolan", new Date(30, 7, 1970));
@@ -18,15 +18,15 @@ public class AppTest {
 		Director sergioLeone = new Director("Sergio", "Leone", new Date(3, 1, 1929));
 		Director davidFincher = new Director("David", "Fincher", new Date(28, 8, 1962));
 
-		dbManager.addDirector(darabont);
-		dbManager.addDirector(coppola);
-		dbManager.addDirector(nolan);
-		dbManager.addDirector(lumet);
-		dbManager.addDirector(spielberg);
-		dbManager.addDirector(peterJackson);
-		dbManager.addDirector(tarantino);
-		dbManager.addDirector(sergioLeone);
-		dbManager.addDirector(davidFincher);
+		database.addDirector(darabont);
+		database.addDirector(coppola);
+		database.addDirector(nolan);
+		database.addDirector(lumet);
+		database.addDirector(spielberg);
+		database.addDirector(peterJackson);
+		database.addDirector(tarantino);
+		database.addDirector(sergioLeone);
+		database.addDirector(davidFincher);
 
 		Movie shawshank = new Movie("Shawshank Redemption", 1994, 142, darabont);
 		Movie godfather = new Movie("The Godfather", 1972, 175, coppola);
@@ -39,16 +39,16 @@ public class AppTest {
 		Movie goodBadUgly = new Movie("The Good, the Bad and the Ugly", 1966, 148, sergioLeone);
 		Movie fightClub = new Movie("The Fight Club", 1999, 139, davidFincher);
 
-		dbManager.addMovie(shawshank);
-		dbManager.addMovie(godfather);
-		dbManager.addMovie(godfatherII);
-		dbManager.addMovie(darkKnight);
-		dbManager.addMovie(angryMen);
-		dbManager.addMovie(schindler);
-		dbManager.addMovie(lotr3);
-		dbManager.addMovie(pulp);
-		dbManager.addMovie(goodBadUgly);
-		dbManager.addMovie(fightClub);
+		database.addMovie(shawshank);
+		database.addMovie(godfather);
+		database.addMovie(godfatherII);
+		database.addMovie(darkKnight);
+		database.addMovie(angryMen);
+		database.addMovie(schindler);
+		database.addMovie(lotr3);
+		database.addMovie(pulp);
+		database.addMovie(goodBadUgly);
+		database.addMovie(fightClub);
 	}
 
 }

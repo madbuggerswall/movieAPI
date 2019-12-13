@@ -1,8 +1,5 @@
 import static spark.Spark.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class App {
 	public static void main(String[] args) {
 		System.out.println("Main");
@@ -12,10 +9,10 @@ public class App {
 
 class RequestHandler {
 	int port = 8080;
-	DatabaseManager databaseManager;
+	Database database;
 
 	public RequestHandler() {
-		databaseManager = DatabaseManager.getInstance();
+		database = Database.getInstance();
 		port(port);
 		handleGetRequests();
 	}
@@ -23,7 +20,7 @@ class RequestHandler {
 	void handleGetRequests() {
 		get("/movies", (request, response) -> "getAllMovies");
 		get("/movies/:id", (request, response) -> {
-			return databaseManager.getMovie(request.params(":id"));
+			return database.getMovie(request.params(":id"));
 		});
 	}
 }
