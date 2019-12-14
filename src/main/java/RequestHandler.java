@@ -12,6 +12,11 @@ class RequestHandler {
 	}
 
 	void setResponseHeaders() {
+		options("/*", (request, response) -> {
+			response.header("Access-Control-Allow-Origin", "*");
+			return "OK";
+		});
+
 		before((request, response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
 		});
