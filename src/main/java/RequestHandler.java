@@ -32,39 +32,41 @@ class RequestHandler {
 
 	void handlePaths() {
 		setResponseHeaders();
-		path("/api", () -> {
-			before("/*", (q, a) -> System.out.println("Received api call"));
-			path("/movie", () -> {
-				get("/get/id/:id", (request, response) -> {
-					return database.getMovie(request.params(":id")).toJSON();
-				});
-				get("/get/all", (request, response) -> {
-					response.type("application/json");
-					return gson.toJson(database.getAllMovies());
-				});
-				post("/add", (request, response) -> {
-					database.addMovie(gson.fromJson(request.body(), Movie.class));
-					return null;
-				});
-				post("/set", (request, response) -> {
-					database.setMovie(gson.fromJson(request.body(), Movie.class));
-					return null;
-				});
+		before("/*", (q, a) -> System.out.println("Received API call"));
+		path("/movies", () -> {
+			get("", (request, response) -> {
+				response.type("application/json");
+				return gson.toJson(database.getAllMovies());
 			});
-			path("/director", () -> {
-				get("/get/id/:id", (request, response) -> {
-					response.type("application/json");
-					return database.getDirector(request.params(":id")).toJSON();
-				});
-				get("/get/all", (request, response) -> gson.toJson(database.getAllDirectors()));
-				post("/add", (request, response) -> {
-					database.addDirector(gson.fromJson(request.body(), Director.class));
-					return null;
-				});
-				post("/set", (request, response) -> {
-					database.setDirector(gson.fromJson(request.body(), Director.class));
-					return null;
-				});
+			get("/:id", (request, response) -> {
+				response.type("application/json");
+				return database.getMovie(request.params(":id")).toJSON();
+			});
+			post("", (request, response) -> {
+				database.addMovie(gson.fromJson(request.body(), Movie.class));
+				return null;
+			});
+			put("/:id", (request, response) -> {
+				database.setMovie(gson.fromJson(request.body(), Movie.class));
+				return response;
+			});
+		});
+		path("/directors", () -> {
+			get("", (request, response) -> {
+				response.type("application/json");
+				return gson.toJson(database.getAllDirectors());
+			});
+			get("/:id", (request, response) -> {
+				response.type("application/json");
+				return database.getDirector(request.params(":id")).toJSON();
+			});
+			post("", (request, response) -> {
+				database.addDirector(gson.fromJson(request.body(), Director.class));
+				return response;
+			});
+			put("/:id", (request, response) -> {
+				database.setDirector(gson.fromJson(request.body(), Director.class));
+				return response;
 			});
 		});
 	}
