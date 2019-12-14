@@ -12,25 +12,8 @@ class RequestHandler {
 	}
 
 	void setResponseHeaders() {
-		options("/*", (request, response) -> {
-			String accessControlRequestHeaders = request
-				.headers("Access-Control-Request-Headers");
-			if (accessControlRequestHeaders != null) {
-				response.header("Access-Control-Allow-Headers",
-					accessControlRequestHeaders);
-			}
-			String accessControlRequestMethod = request
-				.headers("Access-Control-Request-Method");
-			if (accessControlRequestMethod != null) {
-				response.header("Access-Control-Allow-Methods",
-					accessControlRequestMethod);
-			}
-
-			return "OK";
-		});
 		before((request, response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
-			response.type("application/json");
 		});
 	}
 
@@ -44,7 +27,8 @@ class RequestHandler {
 				});
 				get("/get/all", (request, response) -> {
 					response.type("application/json");
-					return gson.toJson(database.getAllMovies());
+					response.body(gson.toJson(database.getAllMovies()));
+					return response.body();
 				});
 				post("/add", (request, response) -> {
 					database.addMovie(gson.fromJson(request.body(), Movie.class));
