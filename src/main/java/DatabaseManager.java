@@ -21,12 +21,12 @@ import com.google.firebase.cloud.FirestoreClient;
 class DatabaseManager {
 	static DatabaseManager instance;
 	static final String credentialsFilePath = "credentials.json";
-	private static Logger logger;
+	private static SingletonLogger logger;
 
 	Firestore db;
 
 	public DatabaseManager() {
-		logger = Logger.getInstance();
+		logger = SingletonLogger.getInstance();
 
 		GoogleCredentials googleCredentials = getGoogleCredentials(credentialsFilePath);
 		FirebaseOptions options = new FirebaseOptions.Builder()

@@ -1,5 +1,6 @@
-import static spark.Spark.*;
 import com.google.gson.Gson;
+
+import static spark.Spark.*;
 
 class RequestHandler {
 	int port = 8080;

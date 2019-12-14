@@ -1,12 +1,12 @@
 import java.io.*;
 
-public class Logger {
+public class SingletonLogger {
 
-    private static Logger logger;
+    private static SingletonLogger singletonLogger = null;
     private String fileName = "log.txt";
     private PrintWriter writer;
 
-    public Logger(){
+    public SingletonLogger(){
 
         try {
             FileOutputStream fo =  new FileOutputStream(new File(fileName), true);
@@ -18,10 +18,10 @@ public class Logger {
 
     }
 
-    public static Logger getInstance(){
-        if (logger==null)
-            logger = new Logger();
-        return logger;
+    public static SingletonLogger getInstance(){
+        if (singletonLogger ==null)
+            singletonLogger = new SingletonLogger();
+        return singletonLogger;
     }
 
     public void log(String message){
