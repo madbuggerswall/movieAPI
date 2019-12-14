@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -21,13 +22,10 @@ import com.google.firebase.cloud.FirestoreClient;
 class DatabaseManager {
 	static DatabaseManager instance;
 	static final String credentialsFilePath = "credentials.json";
-	private static SingletonLogger logger;
 
 	Firestore db;
 
 	public DatabaseManager() {
-		logger = SingletonLogger.getInstance();
-
 		GoogleCredentials googleCredentials = getGoogleCredentials(credentialsFilePath);
 		FirebaseOptions options = new FirebaseOptions.Builder()
 			.setCredentials(googleCredentials)
@@ -47,36 +45,48 @@ class DatabaseManager {
 
 	// Add a new document with auto-generated ID.
 	public void addDocument(CollectionReference collection, Data data) {
-		String str;
 		DocumentReference docRef = collection.document();
 		data.setID(docRef.getId());
 		ApiFuture<WriteResult> future = docRef.set(data);
-		str = data.id + " ";
-		System.out.println(data.id);
 		try {
-			str += "Update time : " + future.get().getUpdateTime();
-			System.out.println("Update time : " + future.get().getUpdateTime());
+			Timestamp timestamp = future.get().getUpdateTime();
+			LogEntry logEntry = new LogEntry.Builder("[Add]")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.withTimestamp(timestamp)
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
-			str += e.getMessage();
+			LogEntry logEntry = new LogEntry.Builder("[Add FAILED]")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
 			System.out.println(e.getMessage());
 		}
-		logger.log(str);
 	}
 
 	// future.get() blocks on response.
 	public DocumentSnapshot getDocument(String docID, CollectionReference collection) {
-		logger.log("Get Document with ID: " + docID);
-		System.out.println(docID);
 		DocumentReference docRef = collection.document(docID);
 		ApiFuture<DocumentSnapshot> future = docRef.get();
 		DocumentSnapshot document = null;
 		try {
 			document = future.get();
+			LogEntry logEntry = new LogEntry.Builder("[Get]")
+				.withID(docID)
+				.withCollectionPath(collection.getId())
+				.withTimestamp(document.getReadTime())
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
-			logger.log("Problem happened while getting the document");
+			LogEntry logEntry = new LogEntry.Builder("[Get FAILED]")
+				.withID(docID)
+				.withCollectionPath(collection.getId())
+				.build();
+			Logger.logOperation(logEntry);
 			e.printStackTrace();
 		}
-		logger.log("Document successfully read");
 		return document;
 	}
 
@@ -86,8 +96,18 @@ class DatabaseManager {
 		List<QueryDocumentSnapshot> documents = new ArrayList<QueryDocumentSnapshot>();
 
 		try {
-			documents = future.get().getDocuments();
+			QuerySnapshot querySnapshot = future.get();
+			documents = querySnapshot.getDocuments();
+			LogEntry logEntry = new LogEntry.Builder("[Get Collection]")
+				.withCollectionPath(collection.getPath())
+				.withTimestamp(querySnapshot.getReadTime())
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
+			LogEntry logEntry = new LogEntry.Builder("[Get Collection FAILED]")
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
 			e.printStackTrace();
 		}
 
@@ -107,9 +127,19 @@ class DatabaseManager {
 		ApiFuture<WriteResult> future = docRef.set(data);
 
 		try {
-
-			System.out.println("Update time : " + future.get().getUpdateTime());
+			Timestamp timestamp = future.get().getUpdateTime();
+			LogEntry logEntry = new LogEntry.Builder("[Set]")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.withTimestamp(timestamp)
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
+			LogEntry logEntry = new LogEntry.Builder("[Set FAILED]")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
 			System.out.println(e.getMessage());
 		}
 	}
@@ -119,7 +149,6 @@ class DatabaseManager {
 		if (document.exists()) {
 			object = document.toObject(valueType);
 		} else {
-			logger.log("No such document!");
 			System.out.println("No such document!");
 		}
 		return object;
