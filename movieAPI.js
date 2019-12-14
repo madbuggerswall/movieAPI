@@ -1,9 +1,10 @@
 
 let url = "https://8888-dot-6899741-dot-devshell.appspot.com/";
+// let url = "http://localhost:8888/";
 
 function getMovie(id) {
 	let xmlHttp = new XMLHttpRequest();
-	let requestURL = url + "api/movie/id/" + id;
+	let requestURL = url + "api/movie/get/id/" + id;
 	xmlHttp.open("GET", requestURL, false); // false for synchronous request
 	xmlHttp.send();
 	return xmlHttp.responseText;
@@ -11,7 +12,7 @@ function getMovie(id) {
 
 function getAllMovies() {
 	let xmlHttp = new XMLHttpRequest();
-	let requestURL = url + "api/movie/all";
+	let requestURL = url + "api/movie/get/all";
 	xmlHttp.open("GET", requestURL, false); // false for synchronous request
 	xmlHttp.send();
 	return xmlHttp.responseText;
@@ -32,5 +33,3 @@ function getAllDirectors() {
 	xmlHttp.send();
 	return xmlHttp.responseText;
 }
-
-console.log(getAllDirectors());

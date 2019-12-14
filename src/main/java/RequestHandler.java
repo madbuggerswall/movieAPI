@@ -1,5 +1,4 @@
 import static spark.Spark.*;
-import spark.Filter;
 import com.google.gson.Gson;
 
 class RequestHandler {
@@ -12,30 +11,27 @@ class RequestHandler {
 		port(port);
 	}
 
+	void setResponseHeaders() {
+		before((request, response) -> {
+			response.header("Access-Control-Allow-Origin", "*");
+			response.header("Access-Control-Request-Method", "GET");
+			response.header("Access-Control-Allow-Headers",
+				"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+			response.header("Access-Control-Allow-Credentials", "true");
+			response.type("application/json");
+		});
+	}
+
 	void handlePaths() {
-
-		// after((Filter) (request, response) -> {
-		// 	response.header("Access-Control-Allow-Origin", "*");
-		// 	response.header("Access-Control-Allow-Methods", "GET");
-		// 	response.header("Access-Control-Allow-Headers",
-		// 		"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
-		// 	response.header("Access-Control-Allow-Credentials", "true");
-		// });
-
+		setResponseHeaders();
 		path("/api", () -> {
 			before("/*", (q, a) -> System.out.println("Received api call"));
 			path("/movie", () -> {
 				get("/get/id/:id", (request, response) -> {
-					response.body(database.getMovie(request.params(":id")).toJSON());
 					return database.getMovie(request.params(":id")).toJSON();
 				});
 				get("/get/all", (request, response) -> {
-					System.out.println("getAllMovies");
-					response.header("Access-Control-Allow-Origin", "*");
-					response.header("Access-Control-Allow-Methods", "GET");
-					response.header("Access-Control-Allow-Headers","Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
-					response.header("Access-Control-Allow-Credentials", "true");
-					response.body(gson.toJson(database.getAllMovies()));
+					response.type("application/json");
 					return gson.toJson(database.getAllMovies());
 				});
 				post("/add", (request, response) -> {
