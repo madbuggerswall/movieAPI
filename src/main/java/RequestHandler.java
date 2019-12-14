@@ -1,4 +1,5 @@
 import static spark.Spark.*;
+import spark.Filter;
 import com.google.gson.Gson;
 
 class RequestHandler {
@@ -12,27 +13,11 @@ class RequestHandler {
 	}
 
 	void handlePaths() {
-		options("/*",
-			(request, response) -> {
 
-				String accessControlRequestHeaders = request
-					.headers("Access-Control-Request-Headers");
-				if (accessControlRequestHeaders != null) {
-					response.header("Access-Control-Allow-Headers",
-						accessControlRequestHeaders);
-				}
-
-				String accessControlRequestMethod = request
-					.headers("Access-Control-Request-Method");
-				if (accessControlRequestMethod != null) {
-					response.header("Access-Control-Allow-Methods",
-						accessControlRequestMethod);
-				}
-
-				return "OK";
-			});
-
-		before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+		after((Filter) (request, response) -> {
+			response.header("Access-Control-Allow-Origin", "*");
+			response.header("Access-Control-Allow-Methods", "GET");
+		});
 
 		path("/api", () -> {
 			before("/*", (q, a) -> System.out.println("Received api call"));
