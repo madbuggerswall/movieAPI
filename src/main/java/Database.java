@@ -87,5 +87,9 @@ class Database {
 	public void setUser(User user) {
 		dbManager.setDocument(users, user);
 	}
+
+	public void deleteMovie(String movieID){
+		// TODO
+	}
 }
 

@@ -51,6 +51,10 @@ class RequestHandler {
 					database.setMovie(gson.fromJson(request.body(), Movie.class));
 					return null;
 				});
+				delete("/:id", (request, response) -> {
+					database.deleteMovie(":id"); // TODO
+					return null;
+				});
 			});
 			path("/director", () -> {
 				get("/get/id/:id", (request, response) -> {
