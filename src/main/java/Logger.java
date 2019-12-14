@@ -23,29 +23,62 @@ public class Logger {
 		writer.flush();
 	}
 
-	public static void logOperation(String operation, String id, String collectionPath, Timestamp timestamp) {
-		String logMessage = operation + " ";
-		logMessage += "docID: " + id + " ";
-		logMessage += "Collection: " + collectionPath + " ";
-		logMessage += " " + timestamp;
-		Logger.log(logMessage);
-	}
-
-	public static void logOperation(String operation, String id, String collectionPath) {
-		String logMessage = operation;
-		logMessage += "docID: " + id + " ";
-		logMessage += "Collection: " + collectionPath;
+	public static void logOperation(LogEntry logEntry) {
+		String logMessage = logEntry.operation + " ";
+		if (logEntry.id != null) {
+			logMessage += "docID: " + logEntry.id + " ";
+		}
+		if(logEntry.collectionPath != null){
+			logMessage += "Collection: " + logEntry.collectionPath + " ";
+		}
+		if(logEntry.timestamp != null){
+			logMessage += " " + logEntry.timestamp;
+		}
 		Logger.log(logMessage);
 	}
 }
 
-class LogEntry{
+class LogEntry {
 	String operation;
 	String id;
 	String collectionPath;
 	Timestamp timestamp;
 
-	public LogEntry(){
+	public LogEntry() {
+	}
 
+	public static class Builder {
+		String operation;
+		String id;
+		String collectionPath;
+		Timestamp timestamp;
+
+		public Builder(String operation) {
+			this.operation = operation;
+		}
+
+		public Builder withID(String id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder withCollectionPath(String collectionPath) {
+			this.collectionPath = collectionPath;
+			return this;
+		}
+
+		public Builder withTimestamp(Timestamp timestamp) {
+			this.timestamp = timestamp;
+			return this;
+		}
+
+		public LogEntry build() {
+			LogEntry logEntry = new LogEntry();
+			logEntry.operation = this.operation;
+			logEntry.id = this.id;
+			logEntry.collectionPath = this.collectionPath;
+			logEntry.timestamp = this.timestamp;
+			return logEntry;
+		}
 	}
 }

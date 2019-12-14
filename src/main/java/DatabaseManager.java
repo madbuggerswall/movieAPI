@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -49,8 +50,19 @@ class DatabaseManager {
 		data.setID(docRef.getId());
 		ApiFuture<WriteResult> future = docRef.set(data);
 		try {
-			System.out.print("Update time : " + future.get().getUpdateTime());
+			Timestamp timestamp = future.get().getUpdateTime();
+			LogEntry logEntry = new LogEntry.Builder("Add")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.withTimestamp(timestamp)
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
+			LogEntry logEntry = new LogEntry.Builder("Add FAILED")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
 			System.out.println(e.getMessage());
 		}
 	}
@@ -62,7 +74,18 @@ class DatabaseManager {
 		DocumentSnapshot document = null;
 		try {
 			document = future.get();
+			LogEntry logEntry = new LogEntry.Builder("Get")
+				.withID(docID)
+				.withCollectionPath(collection.getId())
+				.withTimestamp(document.getReadTime())
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
+			LogEntry logEntry = new LogEntry.Builder("Get FAILED")
+				.withID(docID)
+				.withCollectionPath(collection.getId())
+				.build();
+			Logger.logOperation(logEntry);
 			e.printStackTrace();
 		}
 		return document;
@@ -75,7 +98,15 @@ class DatabaseManager {
 
 		try {
 			documents = future.get().getDocuments();
+			LogEntry logEntry = new LogEntry.Builder("Get Collection")
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
+			LogEntry logEntry = new LogEntry.Builder("Get Collection FAILED")
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
 			e.printStackTrace();
 		}
 
@@ -95,9 +126,19 @@ class DatabaseManager {
 		ApiFuture<WriteResult> future = docRef.set(data);
 
 		try {
-
-			System.out.println("Update time : " + future.get().getUpdateTime());
+			Timestamp timestamp = future.get().getUpdateTime();
+			LogEntry logEntry = new LogEntry.Builder("Set")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.withTimestamp(timestamp)
+				.build();
+			Logger.logOperation(logEntry);
 		} catch (Exception e) {
+			LogEntry logEntry = new LogEntry.Builder("Set FAILED")
+				.withID(data.id)
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
 			System.out.println(e.getMessage());
 		}
 	}
