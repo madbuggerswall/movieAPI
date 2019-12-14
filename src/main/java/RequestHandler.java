@@ -12,31 +12,24 @@ class RequestHandler {
 	}
 
 	void setResponseHeaders() {
-		options("/*",
-        (request, response) -> {
+		options("/*", (request, response) -> {
+			String accessControlRequestHeaders = request
+				.headers("Access-Control-Request-Headers");
+			if (accessControlRequestHeaders != null) {
+				response.header("Access-Control-Allow-Headers",
+					accessControlRequestHeaders);
+			}
+			String accessControlRequestMethod = request
+				.headers("Access-Control-Request-Method");
+			if (accessControlRequestMethod != null) {
+				response.header("Access-Control-Allow-Methods",
+					accessControlRequestMethod);
+			}
 
-            String accessControlRequestHeaders = request
-                    .headers("Access-Control-Request-Headers");
-            if (accessControlRequestHeaders != null) {
-                response.header("Access-Control-Allow-Headers",
-                        accessControlRequestHeaders);
-            }
-
-            String accessControlRequestMethod = request
-                    .headers("Access-Control-Request-Method");
-            if (accessControlRequestMethod != null) {
-                response.header("Access-Control-Allow-Methods",
-                        accessControlRequestMethod);
-            }
-
-            return "OK";
-        });
+			return "OK";
+		});
 		before((request, response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
-			response.header("Access-Control-Request-Method", "GET");
-			response.header("Access-Control-Allow-Headers",
-				"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
-			response.header("Access-Control-Allow-Credentials", "true");
 			response.type("application/json");
 		});
 	}
