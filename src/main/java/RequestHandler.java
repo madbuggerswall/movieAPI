@@ -14,12 +14,13 @@ class RequestHandler {
 
 	void handlePaths() {
 
-		after((Filter) (request, response) -> {
-			response.header("Access-Control-Allow-Origin", "*");
-			response.header("Access-Control-Allow-Methods", "GET");
-			response.header("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
-			response.header("Access-Control-Allow-Credentials", "true");
-		});
+		// after((Filter) (request, response) -> {
+		// 	response.header("Access-Control-Allow-Origin", "*");
+		// 	response.header("Access-Control-Allow-Methods", "GET");
+		// 	response.header("Access-Control-Allow-Headers",
+		// 		"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+		// 	response.header("Access-Control-Allow-Credentials", "true");
+		// });
 
 		path("/api", () -> {
 			before("/*", (q, a) -> System.out.println("Received api call"));
@@ -30,6 +31,10 @@ class RequestHandler {
 				});
 				get("/get/all", (request, response) -> {
 					System.out.println("getAllMovies");
+					response.header("Access-Control-Allow-Origin", "*");
+					response.header("Access-Control-Allow-Methods", "GET");
+					response.header("Access-Control-Allow-Headers","Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+					response.header("Access-Control-Allow-Credentials", "true");
 					response.body(gson.toJson(database.getAllMovies()));
 					return gson.toJson(database.getAllMovies());
 				});
@@ -57,4 +62,3 @@ class RequestHandler {
 		});
 	}
 }
-
