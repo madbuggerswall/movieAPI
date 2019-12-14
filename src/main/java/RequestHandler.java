@@ -12,17 +12,37 @@ class RequestHandler {
 	}
 
 	void handlePaths() {
+		options("/*",
+			(request, response) -> {
+
+				String accessControlRequestHeaders = request
+					.headers("Access-Control-Request-Headers");
+				if (accessControlRequestHeaders != null) {
+					response.header("Access-Control-Allow-Headers",
+						accessControlRequestHeaders);
+				}
+
+				String accessControlRequestMethod = request
+					.headers("Access-Control-Request-Method");
+				if (accessControlRequestMethod != null) {
+					response.header("Access-Control-Allow-Methods",
+						accessControlRequestMethod);
+				}
+
+				return "OK";
+			});
+
+		before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+
 		path("/api", () -> {
 			before("/*", (q, a) -> System.out.println("Received api call"));
 			path("/movie", () -> {
 				get("/get/id/:id", (request, response) -> {
-					response.header("Access-Control-Allow-Origin", "*");
 					response.body(database.getMovie(request.params(":id")).toJSON());
 					return database.getMovie(request.params(":id")).toJSON();
 				});
 				get("/get/all", (request, response) -> {
 					System.out.println("getAllMovies");
-					response.header("Access-Control-Allow-Origin", "*");
 					response.body(gson.toJson(database.getAllMovies()));
 					return gson.toJson(database.getAllMovies());
 				});
