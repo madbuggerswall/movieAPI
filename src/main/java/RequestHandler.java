@@ -16,10 +16,14 @@ class RequestHandler {
 			before("/*", (q, a) -> System.out.println("Received api call"));
 			path("/movie", () -> {
 				get("/get/id/:id", (request, response) -> {
+					response.header("Access-Control-Allow-Origin", "*");
+					response.body(database.getMovie(request.params(":id")).toJSON());
 					return database.getMovie(request.params(":id")).toJSON();
 				});
 				get("/get/all", (request, response) -> {
 					System.out.println("getAllMovies");
+					response.header("Access-Control-Allow-Origin", "*");
+					response.body(gson.toJson(database.getAllMovies()));
 					return gson.toJson(database.getAllMovies());
 				});
 				post("/add", (request, response) -> {
@@ -32,7 +36,7 @@ class RequestHandler {
 				});
 			});
 			path("/director", () -> {
-				get("/get/id/:id", (request, response) -> database.getDirector(request.params(":id")));
+				get("/get/id/:id", (request, response) -> database.getDirector(request.params(":id")).toJSON());
 				get("/get/all", (request, response) -> gson.toJson(database.getAllDirectors()));
 				post("/add", (request, response) -> {
 					database.addDirector(gson.fromJson(request.body(), Director.class));
