@@ -26,7 +26,6 @@ class DatabaseManager {
 	Firestore db;
 
 	public DatabaseManager() {
-
 		GoogleCredentials googleCredentials = getGoogleCredentials(credentialsFilePath);
 		FirebaseOptions options = new FirebaseOptions.Builder()
 			.setCredentials(googleCredentials)
@@ -51,14 +50,14 @@ class DatabaseManager {
 		ApiFuture<WriteResult> future = docRef.set(data);
 		try {
 			Timestamp timestamp = future.get().getUpdateTime();
-			LogEntry logEntry = new LogEntry.Builder("Add")
+			LogEntry logEntry = new LogEntry.Builder("[Add]")
 				.withID(data.id)
 				.withCollectionPath(collection.getPath())
 				.withTimestamp(timestamp)
 				.build();
 			Logger.logOperation(logEntry);
 		} catch (Exception e) {
-			LogEntry logEntry = new LogEntry.Builder("Add FAILED")
+			LogEntry logEntry = new LogEntry.Builder("[Add FAILED]")
 				.withID(data.id)
 				.withCollectionPath(collection.getPath())
 				.build();
@@ -74,14 +73,14 @@ class DatabaseManager {
 		DocumentSnapshot document = null;
 		try {
 			document = future.get();
-			LogEntry logEntry = new LogEntry.Builder("Get")
+			LogEntry logEntry = new LogEntry.Builder("[Get]")
 				.withID(docID)
 				.withCollectionPath(collection.getId())
 				.withTimestamp(document.getReadTime())
 				.build();
 			Logger.logOperation(logEntry);
 		} catch (Exception e) {
-			LogEntry logEntry = new LogEntry.Builder("Get FAILED")
+			LogEntry logEntry = new LogEntry.Builder("[Get FAILED]")
 				.withID(docID)
 				.withCollectionPath(collection.getId())
 				.build();
@@ -97,13 +96,15 @@ class DatabaseManager {
 		List<QueryDocumentSnapshot> documents = new ArrayList<QueryDocumentSnapshot>();
 
 		try {
-			documents = future.get().getDocuments();
-			LogEntry logEntry = new LogEntry.Builder("Get Collection")
+			QuerySnapshot querySnapshot = future.get();
+			documents = querySnapshot.getDocuments();
+			LogEntry logEntry = new LogEntry.Builder("[Get Collection]")
 				.withCollectionPath(collection.getPath())
+				.withTimestamp(querySnapshot.getReadTime())
 				.build();
 			Logger.logOperation(logEntry);
 		} catch (Exception e) {
-			LogEntry logEntry = new LogEntry.Builder("Get Collection FAILED")
+			LogEntry logEntry = new LogEntry.Builder("[Get Collection FAILED]")
 				.withCollectionPath(collection.getPath())
 				.build();
 			Logger.logOperation(logEntry);
@@ -127,14 +128,14 @@ class DatabaseManager {
 
 		try {
 			Timestamp timestamp = future.get().getUpdateTime();
-			LogEntry logEntry = new LogEntry.Builder("Set")
+			LogEntry logEntry = new LogEntry.Builder("[Set]")
 				.withID(data.id)
 				.withCollectionPath(collection.getPath())
 				.withTimestamp(timestamp)
 				.build();
 			Logger.logOperation(logEntry);
 		} catch (Exception e) {
-			LogEntry logEntry = new LogEntry.Builder("Set FAILED")
+			LogEntry logEntry = new LogEntry.Builder("[Set FAILED]")
 				.withID(data.id)
 				.withCollectionPath(collection.getPath())
 				.build();

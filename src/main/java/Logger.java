@@ -6,8 +6,7 @@ public class Logger {
 	private static String fileName = "log.txt";
 	private static PrintWriter writer;
 
-	public Logger() {
-
+	private static void log(String message) {
 		try {
 			FileOutputStream fileOutput = new FileOutputStream(new File(fileName), true);
 			writer = new PrintWriter(fileOutput);
@@ -15,25 +14,22 @@ public class Logger {
 			System.out.println("Unable to open file '" + fileName + "'");
 			e.printStackTrace();
 		}
-
-	}
-
-	private static void log(String message) {
 		writer.append(message);
 		writer.flush();
 	}
 
 	public static void logOperation(LogEntry logEntry) {
-		String logMessage = logEntry.operation + " ";
+		String logMessage = logEntry.operation + "\t";
 		if (logEntry.id != null) {
-			logMessage += "docID: " + logEntry.id + " ";
+			logMessage += "docID: " + logEntry.id + "\t";
 		}
-		if(logEntry.collectionPath != null){
-			logMessage += "Collection: " + logEntry.collectionPath + " ";
+		if (logEntry.collectionPath != null) {
+			logMessage += "Collection: " + logEntry.collectionPath + "\t";
 		}
-		if(logEntry.timestamp != null){
-			logMessage += " " + logEntry.timestamp;
+		if (logEntry.timestamp != null) {
+			logMessage += " Time: " + logEntry.timestamp;
 		}
+		logMessage += "\n";
 		Logger.log(logMessage);
 	}
 }
