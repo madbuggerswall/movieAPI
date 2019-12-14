@@ -1,32 +1,51 @@
 import java.io.*;
 
+import com.google.cloud.Timestamp;
+
 public class Logger {
+	private static String fileName = "log.txt";
+	private static PrintWriter writer;
 
-    private static Logger logger;
-    private String fileName = "log.txt";
-    private PrintWriter writer;
+	public Logger() {
 
-    public Logger(){
+		try {
+			FileOutputStream fileOutput = new FileOutputStream(new File(fileName), true);
+			writer = new PrintWriter(fileOutput);
+		} catch (Exception e) {
+			System.out.println("Unable to open file '" + fileName + "'");
+			e.printStackTrace();
+		}
 
-        try {
-            FileOutputStream fo =  new FileOutputStream(new File(fileName), true);
-            writer = new PrintWriter(fo);
-        }
-        catch(FileNotFoundException ex) {
-            System.out.println( "Unable to open file '" + fileName + "'");
-        }
+	}
 
-    }
+	private static void log(String message) {
+		writer.append(message);
+		writer.flush();
+	}
 
-    public static Logger getInstance(){
-        if (logger==null)
-            logger = new Logger();
-        return logger;
-    }
+	public static void logOperation(String operation, String id, String collectionPath, Timestamp timestamp) {
+		String logMessage = operation + " ";
+		logMessage += "docID: " + id + " ";
+		logMessage += "Collection: " + collectionPath + " ";
+		logMessage += " " + timestamp;
+		Logger.log(logMessage);
+	}
 
-    public void log(String message){
-        System.out.println("message = [" + message + "]");
-            writer.append(message);
-            writer.flush();
-    }
+	public static void logOperation(String operation, String id, String collectionPath) {
+		String logMessage = operation;
+		logMessage += "docID: " + id + " ";
+		logMessage += "Collection: " + collectionPath;
+		Logger.log(logMessage);
+	}
+}
+
+class LogEntry{
+	String operation;
+	String id;
+	String collectionPath;
+	Timestamp timestamp;
+
+	public LogEntry(){
+
+	}
 }

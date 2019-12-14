@@ -2,7 +2,7 @@ import static spark.Spark.*;
 import com.google.gson.Gson;
 
 class RequestHandler {
-	int port = 8080;
+	int port = 8888;
 	private Database database;
 	private Gson gson = new Gson();
 

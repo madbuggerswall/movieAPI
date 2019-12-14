@@ -21,12 +21,10 @@ import com.google.firebase.cloud.FirestoreClient;
 class DatabaseManager {
 	static DatabaseManager instance;
 	static final String credentialsFilePath = "credentials.json";
-	private static Logger logger;
 
 	Firestore db;
 
 	public DatabaseManager() {
-		logger = Logger.getInstance();
 
 		GoogleCredentials googleCredentials = getGoogleCredentials(credentialsFilePath);
 		FirebaseOptions options = new FirebaseOptions.Builder()
@@ -47,36 +45,26 @@ class DatabaseManager {
 
 	// Add a new document with auto-generated ID.
 	public void addDocument(CollectionReference collection, Data data) {
-		String str;
 		DocumentReference docRef = collection.document();
 		data.setID(docRef.getId());
 		ApiFuture<WriteResult> future = docRef.set(data);
-		str = data.id + " ";
-		System.out.println(data.id);
 		try {
-			str += "Update time : " + future.get().getUpdateTime();
-			System.out.println("Update time : " + future.get().getUpdateTime());
+			System.out.print("Update time : " + future.get().getUpdateTime());
 		} catch (Exception e) {
-			str += e.getMessage();
 			System.out.println(e.getMessage());
 		}
-		logger.log(str);
 	}
 
 	// future.get() blocks on response.
 	public DocumentSnapshot getDocument(String docID, CollectionReference collection) {
-		logger.log("Get Document with ID: " + docID);
-		System.out.println(docID);
 		DocumentReference docRef = collection.document(docID);
 		ApiFuture<DocumentSnapshot> future = docRef.get();
 		DocumentSnapshot document = null;
 		try {
 			document = future.get();
 		} catch (Exception e) {
-			logger.log("Problem happened while getting the document");
 			e.printStackTrace();
 		}
-		logger.log("Document successfully read");
 		return document;
 	}
 
@@ -119,7 +107,6 @@ class DatabaseManager {
 		if (document.exists()) {
 			object = document.toObject(valueType);
 		} else {
-			logger.log("No such document!");
 			System.out.println("No such document!");
 		}
 		return object;
