@@ -109,9 +109,9 @@ class RequestHandler {
 
 			// Add movie to user list.
 			get("/:userID/:listIndex/:movieID", (request, response) -> {
-				String userID = request.params("userID");
-				int listIndex = Integer.parseInt(request.params("userID"));
-				String movieID = request.params("userID");
+				String userID = request.params(":userID");
+				int listIndex = Integer.parseInt(request.params(":listIndex"));
+				String movieID = request.params(":movieID");
 				response.type("application/json");
 				database.addMovieToUserList(userID, listIndex, movieID);
 				response.status(200);
