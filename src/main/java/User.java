@@ -4,6 +4,7 @@ import java.util.List;
 public class User extends Data {
 	String username;
 	String password;
+	String accessToken;
 	String name;
 	String surname;
 
@@ -17,6 +18,7 @@ public class User extends Data {
 		this();
 		this.username = username;
 	}
+
 	public User(String username, String password) {
 		this(username);
 		this.password = password;
@@ -32,8 +34,20 @@ public class User extends Data {
 		return username;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
 	public String getName() {
 		return name;
+	}
+
+	public String getSurname() {
+		return surname;
 	}
 
 	public List<MovieList> getLists() {
@@ -49,7 +63,13 @@ public class User extends Data {
 	}
 }
 
+// Credentials
 class UserDTO {
 	String username;
 	String password;
+
+	public UserDTO(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 }

@@ -112,18 +112,39 @@ class Database {
 		return user;
 	}
 
+	public List<User> getAllUsers() {
+		return dbManager.getCollection(users, User.class);
+	}
+
+	public User hasLoggedIn(String docID, String accessToken) {
+		User user = getUser(docID);
+		
+		if (user.accessToken.equals(accessToken))
+			return user;
+		else
+			return null;
+	}
+
 	public User loginUser(UserDTO userDTO) {
 		if (userNameExists(userDTO.username)) {
 			User user = findUser(userDTO.username);
-			if (DigestUtils.sha256Hex(userDTO.password) == user.password) {
+			String userDTOPassword = DigestUtils.sha256Hex(userDTO.password);
+			System.out.println(userDTOPassword);
+			System.out.println(user.password);
+			if (userDTOPassword.equals(user.password)) {
+				System.out.println("passwords same");
+				user.accessToken = DigestUtils.sha256Hex(userDTO.username + userDTO.password);
+				setUser(user);
 				return user;
 			}
 		}
 		return null;
 	}
 
-	public List<User> getAllUsers() {
-		return dbManager.getCollection(users, User.class);
+	public void logOutUser(String docID) {
+		User user = getUser(docID);
+		user.accessToken = "";
+		setUser(user);
 	}
 
 	public void setUser(User user) {

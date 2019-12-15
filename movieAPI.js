@@ -28,7 +28,7 @@ function addDirector(data) {
 	return post("/directors", data)
 }
 
-function deleteMovie(id) {
+function deleteDirector(id) {
 	deleteDoc("/directors/" + id);
 }
 
@@ -49,7 +49,7 @@ function addUser(data) {
 	return post("/users", data);
 }
 
-function deleteMovie(id) {
+function deleteUser(id) {
 	deleteDoc("/users/" + id);
 }
 
@@ -61,6 +61,14 @@ function getAllUsers() {
 	return get("/users");
 }
 
+function hasLoggedIn(id, token){
+	return post("/users/hasLoggedIn/" + id, token);
+}
+
+function loginUser(userDTO){
+	return post("/users/login", userDTO);
+}
+
 function updateUser(id, data) {
 	return put("/users/" + id, data);
 }
@@ -69,6 +77,7 @@ function get(query) {
 	return request("GET", query);
 }
 
+// Generic request method functions.
 function post(query, data) {
 	return request("POST", query, data);
 }
@@ -81,6 +90,7 @@ function deleteDoc(query) {
 	return request("DELETE", query)
 }
 
+// Generic request functions.
 function request(type, query) {
 	let xmlHttp = new XMLHttpRequest();
 	let requestURL = url + query;
@@ -91,7 +101,7 @@ function request(type, query) {
 function request(type, query, data) {
 	let xmlHttp = new XMLHttpRequest();
 	let requestURL = url + query;
-	xmlHttp.open(type, requestURL, false); 
+	xmlHttp.open(type, requestURL, false);
 	xmlHttp.send(data);
 	return xmlHttp.responseText;
 }
