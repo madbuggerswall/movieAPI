@@ -49,6 +49,10 @@ function addUser(data) {
 	return post("/users", data);
 }
 
+function addMovieToUserList(userID, listIndex, movieID) {
+	return get("/users/" + userID + "/" + listIndex + "/" + movieID);
+}
+
 function deleteUser(id) {
 	deleteDoc("/users/" + id);
 }
@@ -61,11 +65,11 @@ function getAllUsers() {
 	return get("/users");
 }
 
-function hasLoggedIn(id, token){
+function hasLoggedIn(id, token) {
 	return post("/users/hasLoggedIn/" + id, token);
 }
 
-function loginUser(userDTO){
+function loginUser(userDTO) {
 	return post("/users/login", userDTO);
 }
 
