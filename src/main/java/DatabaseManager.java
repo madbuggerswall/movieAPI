@@ -68,7 +68,7 @@ class DatabaseManager {
 	}
 
 	public void deleteDocument(CollectionReference collection, String docID) {
-		ApiFuture<WriteResult> writeResult = db.collection("cities").document("DC").delete();
+		ApiFuture<WriteResult> writeResult = collection.document(docID).delete();
 		try {
 			Timestamp timestamp = writeResult.get().getUpdateTime();
 			LogEntry logEntry = new LogEntry.Builder("[Delete]")
