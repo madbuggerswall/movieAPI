@@ -44,10 +44,14 @@ class RequestHandler {
 			});
 			post("", (request, response) -> {
 				database.addMovie(gson.fromJson(request.body(), Movie.class));
-				return null;
+				return response;
 			});
 			put("/:id", (request, response) -> {
 				database.setMovie(gson.fromJson(request.body(), Movie.class));
+				return response;
+			});
+			delete(":id", (request, response) -> {
+				database.deleteMovie(request.params(":id"));
 				return response;
 			});
 		});
@@ -66,6 +70,33 @@ class RequestHandler {
 			});
 			put("/:id", (request, response) -> {
 				database.setDirector(gson.fromJson(request.body(), Director.class));
+				return response;
+			});
+			delete(":id", (request, response) -> {
+				database.deleteDirector(request.params(":id"));
+				return response;
+			});
+		});
+
+		path("/users", () -> {
+			get("", (request, response) -> {
+				response.type("application/json");
+				return gson.toJson(database.getAllUsers());
+			});
+			get("/:id", (request, response) -> {
+				response.type("application/json");
+				return database.getUser(request.params(":id")).toJSON();
+			});
+			post("", (request, response) -> {
+				database.addUser(gson.fromJson(request.body(), User.class));
+				return response;
+			});
+			put("/:id", (request, response) -> {
+				database.setUser(gson.fromJson(request.body(), User.class));
+				return response;
+			});
+			delete(":id", (request, response) -> {
+				database.deleteUser(request.params(":id"));
 				return response;
 			});
 		});

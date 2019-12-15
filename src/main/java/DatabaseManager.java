@@ -9,6 +9,7 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
@@ -66,12 +67,33 @@ class DatabaseManager {
 		}
 	}
 
-	// future.get() blocks on response.
+	public void deleteDocument(CollectionReference collection, String docID) {
+		ApiFuture<WriteResult> writeResult = db.collection("cities").document("DC").delete();
+		try {
+			Timestamp timestamp = writeResult.get().getUpdateTime();
+			LogEntry logEntry = new LogEntry.Builder("[Delete]")
+				.withID(docID)
+				.withCollectionPath(collection.getPath())
+				.withTimestamp(timestamp)
+				.build();
+			Logger.logOperation(logEntry);
+		} catch (Exception e) {
+			LogEntry logEntry = new LogEntry.Builder("[Delete FAILED]")
+				.withID(docID)
+				.withCollectionPath(collection.getPath())
+				.build();
+			Logger.logOperation(logEntry);
+			e.printStackTrace();
+		}
+	}
+
+	// Returns a null object if there is no object with given document ID.
 	public DocumentSnapshot getDocument(String docID, CollectionReference collection) {
 		DocumentReference docRef = collection.document(docID);
 		ApiFuture<DocumentSnapshot> future = docRef.get();
 		DocumentSnapshot document = null;
 		try {
+			// future.get() blocks on response.
 			document = future.get();
 			LogEntry logEntry = new LogEntry.Builder("[Get]")
 				.withID(docID)
@@ -120,6 +142,20 @@ class DatabaseManager {
 
 	public CollectionReference getCollectionReference(String path) {
 		return db.collection(path);
+	}
+
+	public List<QueryDocumentSnapshot> findDocuments(String field, String value, CollectionReference collection) {
+		Query query = collection.whereEqualTo(field, value);
+		ApiFuture<QuerySnapshot> future = query.get();
+		List<QueryDocumentSnapshot> documents = new ArrayList<QueryDocumentSnapshot>();
+
+		try {
+			documents = future.get().getDocuments();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return documents;
 	}
 
 	public void setDocument(CollectionReference collection, Data data) {
