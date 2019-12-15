@@ -2,7 +2,6 @@ import java.io.FileNotFoundException;
 
 public class AppTest {
 	public static void main(String[] args) throws FileNotFoundException {
-		addTopTenToDB();
 	}
 
 	// Don't call unless database is empty.

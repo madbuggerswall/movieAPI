@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class User extends Data{
+public class User extends Data {
 	String username;
+	String password;
+	String accessToken;
 	String name;
 	String surname;
 
@@ -17,8 +19,13 @@ public class User extends Data{
 		this.username = username;
 	}
 
-	public User(String username, String name, String surname) {
+	public User(String username, String password) {
 		this(username);
+		this.password = password;
+	}
+
+	public User(String username, String password, String name, String surname) {
+		this(username, password);
 		this.name = name;
 		this.surname = surname;
 	}
@@ -27,8 +34,20 @@ public class User extends Data{
 		return username;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
 	public String getName() {
 		return name;
+	}
+
+	public String getSurname() {
+		return surname;
 	}
 
 	public List<MovieList> getLists() {
@@ -41,5 +60,16 @@ public class User extends Data{
 
 	public void removeList(MovieList movieList) {
 		lists.remove(movieList);
+	}
+}
+
+// Credentials
+class UserDTO {
+	String username;
+	String password;
+
+	public UserDTO(String username, String password) {
+		this.username = username;
+		this.password = password;
 	}
 }

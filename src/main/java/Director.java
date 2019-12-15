@@ -41,12 +41,16 @@ public class Director extends Data {
 	public void addMovie(Movie movie) {
 		movies.add(movie);
 	}
+
+	public void removeMovie(Movie movie) {
+		movies.remove(movie);
+	}
 }
 
 class Date {
-	private int day;
-	private int month;
-	private int year;
+	protected int day;
+	protected int month;
+	protected int year;
 
 	public Date() {
 	}
@@ -86,4 +90,26 @@ class Date {
 		return clamp(day, 1, 12);
 	}
 
+}
+
+class NullDirector extends Director {
+	public NullDirector() {
+		super("TBA", "TBA", new NullDate());
+	}
+
+	@Override
+	public void addMovie(Movie movie) {
+	}
+
+	@Override
+	public void removeMovie(Movie movie) {
+	}
+}
+
+class NullDate extends Date{
+	public NullDate(){
+		day = 0;
+		month = 0;
+		year = 0;
+	}
 }

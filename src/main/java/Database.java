@@ -3,17 +3,19 @@ import java.util.List;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 class Database {
-	static Database instance;
-	DatabaseManager dbManager;
+	private static Database instance;
+	private DatabaseManager dbManager;
 
-	static final String movieCollectionName = "Movies";
-	static final String directorCollectionName = "Directors";
-	static final String userCollectionName = "Users";
+	private static final String movieCollectionName = "Movies";
+	private static final String directorCollectionName = "Directors";
+	private static final String userCollectionName = "Users";
 
-	CollectionReference movies;
-	CollectionReference users;
-	CollectionReference directors;
+	private CollectionReference movies;
+	private CollectionReference users;
+	private CollectionReference directors;
 
 	// Assert singleton.
 	public static Database getInstance() {
@@ -30,26 +32,48 @@ class Database {
 		users = dbManager.getCollectionReference(userCollectionName);
 	}
 
+	// Movie
 	public void addMovie(Movie movie) {
 		dbManager.addDocument(movies, movie);
-		Director director = getDirector(movie.director.getID());
+		Director director = getDirector(movie.getDirector().getID());
 		director.addMovie(movie);
 		setDirector(director);
 	}
 
-	public void addDirector(Director director) {
-		dbManager.addDocument(directors, director);
+	public void deleteMovie(String docID) {
+		Movie movie = getMovie(docID);
+		Director director = movie.getDirector();
+		director.removeMovie(movie);
+		dbManager.deleteDocument(movies, docID);
+		setDirector(director);
 	}
 
-	public void addUser(User user) {
-		dbManager.addDocument(users, user);
-	}
-
-	// Returns a null object if there is no object with given document ID.
 	public Movie getMovie(String docID) {
 		DocumentSnapshot document = dbManager.getDocument(docID, movies);
 		Movie movie = dbManager.toObject(document, Movie.class);
 		return movie;
+	}
+
+	public List<Movie> getAllMovies() {
+		return dbManager.getCollection(movies, Movie.class);
+	}
+
+	public void setMovie(Movie movie) {
+		dbManager.setDocument(movies, movie);
+	}
+
+	// Director
+	public void addDirector(Director director) {
+		dbManager.addDocument(directors, director);
+	}
+
+	public void deleteDirector(String docID) {
+		List<Movie> movies = getDirector(docID).getMovies();
+		for (Movie movie : movies) {
+			movie.director = new NullDirector();
+			setMovie(movie);
+		}
+		dbManager.deleteDocument(directors, docID);
 	}
 
 	public Director getDirector(String docID) {
@@ -58,38 +82,76 @@ class Database {
 		return director;
 	}
 
-	public User getUser(String docID) {
-		DocumentSnapshot document = dbManager.getDocument(docID, users);
-		User user = dbManager.toObject(document, User.class);
-		return user;
-	}
-
-	public List<Movie> getAllMovies() {
-		return dbManager.getCollection(movies, Movie.class);
-	}
-
 	public List<Director> getAllDirectors() {
 		return dbManager.getCollection(directors, Director.class);
-	}
-
-	public List<User> getAllUsers() {
-		return dbManager.getCollection(users, User.class);
-	}
-
-	public void setMovie(Movie movie) {
-		dbManager.setDocument(movies, movie);
 	}
 
 	public void setDirector(Director director) {
 		dbManager.setDocument(directors, director);
 	}
 
+	// User
+	public void addUser(User user) {
+		user.password = DigestUtils.sha256Hex(user.password);
+		dbManager.addDocument(users, user);
+	}
+
+	public void deleteUser(String docID) {
+		dbManager.deleteDocument(users, docID);
+	}
+
+	public User findUser(String username) {
+		DocumentSnapshot document = dbManager.findDocuments("username", username, users).get(0);
+		User user = document.toObject(User.class);
+		return user;
+	}
+
+	public User getUser(String docID) {
+		DocumentSnapshot document = dbManager.getDocument(docID, users);
+		User user = dbManager.toObject(document, User.class);
+		return user;
+	}
+
+	public List<User> getAllUsers() {
+		return dbManager.getCollection(users, User.class);
+	}
+
+	public User hasLoggedIn(String docID, String accessToken) {
+		User user = getUser(docID);
+
+		if (user.accessToken.equals(accessToken))
+			return user;
+		else
+			return null;
+	}
+
+	public User loginUser(UserDTO userDTO) {
+		if (userNameExists(userDTO.username)) {
+			User user = findUser(userDTO.username);
+			String userDTOPassword = DigestUtils.sha256Hex(userDTO.password);
+			System.out.println(userDTOPassword);
+			System.out.println(user.password);
+			if (userDTOPassword.equals(user.password)) {
+				System.out.println("passwords same");
+				user.accessToken = DigestUtils.sha256Hex(userDTO.username + userDTO.password);
+				setUser(user);
+				return user;
+			}
+		}
+		return null;
+	}
+
+	public void logOutUser(String docID) {
+		User user = getUser(docID);
+		user.accessToken = "";
+		setUser(user);
+	}
+
 	public void setUser(User user) {
 		dbManager.setDocument(users, user);
 	}
 
-	public void deleteMovie(String movieID){
-		// TODO
+	public boolean userNameExists(String username) {
+		return !dbManager.findDocuments("username", username, users).isEmpty();
 	}
 }
-
