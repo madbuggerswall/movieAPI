@@ -1,34 +1,26 @@
 
-let url = "https://8888-dot-6899741-dot-devshell.appspot.com/";
+let url = "http://ec2-52-56-129-37.eu-west-2.compute.amazonaws.com:8888/";
 // let url = "http://localhost:8888/";
 
 function getMovie(id) {
-	let xmlHttp = new XMLHttpRequest();
-	let requestURL = url + "api/movie/get/id/" + id;
-	xmlHttp.open("GET", requestURL, false); // false for synchronous request
-	xmlHttp.send();
-	return xmlHttp.responseText;
+	return get("/movies/"+id);
 }
 
 function getAllMovies() {
-	let xmlHttp = new XMLHttpRequest();
-	let requestURL = url + "api/movie/get/all";
-	xmlHttp.open("GET", requestURL, false); // false for synchronous request
-	xmlHttp.send();
-	return xmlHttp.responseText;
+	return get("/movies");
 }
 
 function getDirector(id){
-	let xmlHttp = new XMLHttpRequest();
-	let requestURL = url + "api/director/id/" + id;
-	xmlHttp.open("GET", requestURL, false); // false for synchronous request
-	xmlHttp.send();
-	return xmlHttp.responseText;
+	return get("/directors/"+id);
 }
 
 function getAllDirectors() {
+	return get("/directors");
+}
+
+function get(request){
 	let xmlHttp = new XMLHttpRequest();
-	let requestURL = url + "api/director/all";
+	let requestURL = url + request;
 	xmlHttp.open("GET", requestURL, false); // false for synchronous request
 	xmlHttp.send();
 	return xmlHttp.responseText;
