@@ -8,7 +8,7 @@ function addMovie(data) {
 }
 
 function deleteMovie(id) {
-	deleteDoc("/movies/" + id);
+	return deleteDoc("/movies/" + id);
 }
 
 function getMovie(id) {
@@ -29,7 +29,7 @@ function addDirector(data) {
 }
 
 function deleteDirector(id) {
-	deleteDoc("/directors/" + id);
+	return deleteDoc("/directors/" + id);
 }
 
 function getDirector(id) {
@@ -54,7 +54,7 @@ function addMovieToUserList(userID, listIndex, movieID) {
 }
 
 function deleteUser(id) {
-	deleteDoc("/users/" + id);
+	return deleteDoc("/users/" + id);
 }
 
 function getUser(id) {

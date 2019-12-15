@@ -14,7 +14,7 @@ class RequestHandler {
 	void setResponseHeaders() {
 		options("/*", (request, response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
-			response.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+			response.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
 			response.header("Access-Control-Allow-Headers",
 				"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
 			response.header("Access-Control-Allow-Credentials", "true");
@@ -23,7 +23,7 @@ class RequestHandler {
 
 		before((request, response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
-			response.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+			response.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
 			response.header("Access-Control-Allow-Headers",
 				"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
 			response.header("Access-Control-Allow-Credentials", "true");
@@ -64,7 +64,8 @@ class RequestHandler {
 			});
 
 			// Delete movie.
-			delete(":id", (request, response) -> {
+			delete("/:id", (request, response) -> {
+				System.out.println("delete");
 				database.deleteMovie(request.params(":id"));
 				response.status(200);
 				return response;
@@ -88,7 +89,7 @@ class RequestHandler {
 				database.setDirector(gson.fromJson(request.body(), Director.class));
 				return response;
 			});
-			delete(":id", (request, response) -> {
+			delete("/:id", (request, response) -> {
 				database.deleteDirector(request.params(":id"));
 				return response;
 			});
@@ -171,7 +172,7 @@ class RequestHandler {
 			});
 
 			// Delete user.
-			delete(":id", (request, response) -> {
+			delete("/:id", (request, response) -> {
 				database.deleteUser(request.params(":id"));
 				return response;
 			});
