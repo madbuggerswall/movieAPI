@@ -1,5 +1,6 @@
-import static spark.Spark.*;
 import com.google.gson.Gson;
+
+import static spark.Spark.*;
 
 class RequestHandler {
 	int port = 8888;
@@ -33,6 +34,7 @@ class RequestHandler {
 		setResponseHeaders();
 		before("/*", (q, a) -> System.out.println("Received API call"));
 
+		/* MOVIE */
 		path("/movies", () -> {
 
 			// Get all movies.
@@ -71,29 +73,41 @@ class RequestHandler {
 			});
 		});
 
+		/* DIRECTOR */
 		path("/directors", () -> {
+			
+			// Get All Directors
 			get("", (request, response) -> {
 				response.type("application/json");
 				return gson.toJson(database.getAllDirectors());
 			});
+
+			// Get Director w/id
 			get("/:id", (request, response) -> {
 				response.type("application/json");
 				return database.getDirector(request.params(":id")).toJSON();
 			});
+
+			// Add new Director
 			post("", (request, response) -> {
 				database.addDirector(gson.fromJson(request.body(), Director.class));
 				return response;
 			});
+
+			// Update Director
 			put("/:id", (request, response) -> {
 				database.setDirector(gson.fromJson(request.body(), Director.class));
 				return response;
 			});
+
+			// Delete Director
 			delete("/:id", (request, response) -> {
 				database.deleteDirector(request.params(":id"));
 				return response;
 			});
 		});
 
+		/* USER */
 		path("/users", () -> {
 			// Get all users.
 			get("", (request, response) -> {

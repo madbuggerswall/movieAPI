@@ -125,7 +125,7 @@ class Database {
 
 	public User hasLoggedIn(String docID, String accessToken) {
 		User user = getUser(docID);
-		
+
 		if (user.accessToken.equals(accessToken))
 			return user;
 		else
