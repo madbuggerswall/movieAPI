@@ -53,7 +53,7 @@ class RequestHandler {
 			post("", (request, response) -> {
 				database.addMovie(gson.fromJson(request.body(), Movie.class));
 				response.status(200);
-				return response;
+				return response.status();
 			});
 
 			// Update movie.
@@ -74,7 +74,7 @@ class RequestHandler {
 
 		// Director
 		path("/directors", () -> {
-			
+
 			// Get All Directors
 			get("", (request, response) -> {
 				response.type("application/json");

@@ -4,6 +4,7 @@ import java.util.List;
 public class User extends Data {
 	String username;
 	String password;
+	String role;
 	String accessToken;
 	String name;
 	String surname;
@@ -12,6 +13,7 @@ public class User extends Data {
 
 	public User() {
 		lists = new ArrayList<MovieList>();
+		role = "user";
 	}
 
 	public User(String username) {
@@ -38,6 +40,10 @@ public class User extends Data {
 		return password;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
 	public String getAccessToken() {
 		return accessToken;
 	}
@@ -50,7 +56,7 @@ public class User extends Data {
 		return surname;
 	}
 
-	public MovieList getList(int index){
+	public MovieList getList(int index) {
 		return lists.get(index);
 	}
 
