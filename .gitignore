@@ -31,3 +31,4 @@ buildNumber.properties
 /target
 .gitattributes
 credentials.json
+log.txt
