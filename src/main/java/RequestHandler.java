@@ -1,5 +1,4 @@
 import com.google.gson.Gson;
-
 import static spark.Spark.*;
 
 class RequestHandler {
@@ -34,7 +33,7 @@ class RequestHandler {
 		setResponseHeaders();
 		before("/*", (q, a) -> System.out.println("Received API call"));
 
-		/* MOVIE */
+		// Movie
 		path("/movies", () -> {
 
 			// Get all movies.
@@ -73,7 +72,7 @@ class RequestHandler {
 			});
 		});
 
-		/* DIRECTOR */
+		// Director
 		path("/directors", () -> {
 			
 			// Get All Directors
@@ -107,7 +106,7 @@ class RequestHandler {
 			});
 		});
 
-		/* USER */
+		// User
 		path("/users", () -> {
 			// Get all users.
 			get("", (request, response) -> {

@@ -96,7 +96,7 @@ class Database {
 		dbManager.addDocument(users, user);
 	}
 
-	public void addMovieToUserList(String userID, int listIndex, String movieID){
+	public void addMovieToUserList(String userID, int listIndex, String movieID) {
 		User user = getUser(userID);
 		Movie movie = getMovie(movieID);
 		user.getList(listIndex).addMovie(movie);
@@ -125,7 +125,6 @@ class Database {
 
 	public User hasLoggedIn(String docID, String accessToken) {
 		User user = getUser(docID);
-
 		if (user.accessToken.equals(accessToken))
 			return user;
 		else
