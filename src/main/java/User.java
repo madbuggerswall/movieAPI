@@ -50,6 +50,10 @@ public class User extends Data {
 		return surname;
 	}
 
+	public MovieList getList(int index){
+		return lists.get(index);
+	}
+
 	public List<MovieList> getLists() {
 		return lists;
 	}

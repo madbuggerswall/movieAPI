@@ -96,6 +96,13 @@ class Database {
 		dbManager.addDocument(users, user);
 	}
 
+	public void addMovieToUserList(String userID, int listIndex, String movieID){
+		User user = getUser(userID);
+		Movie movie = getMovie(movieID);
+		user.getList(listIndex).addMovie(movie);
+		setUser(user);
+	}
+
 	public void deleteUser(String docID) {
 		dbManager.deleteDocument(users, docID);
 	}
