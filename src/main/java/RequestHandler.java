@@ -60,7 +60,7 @@ class RequestHandler {
 			put("/:id", (request, response) -> {
 				database.setMovie(gson.fromJson(request.body(), Movie.class));
 				response.status(200);
-				return response;
+				return response.status();
 			});
 
 			// Delete movie.
@@ -68,7 +68,7 @@ class RequestHandler {
 				System.out.println("delete");
 				database.deleteMovie(request.params(":id"));
 				response.status(200);
-				return response;
+				return response.status();
 			});
 		});
 
@@ -90,19 +90,22 @@ class RequestHandler {
 			// Add new Director
 			post("", (request, response) -> {
 				database.addDirector(gson.fromJson(request.body(), Director.class));
-				return response;
+				response.status(200);
+				return response.status();
 			});
 
 			// Update Director
 			put("/:id", (request, response) -> {
 				database.setDirector(gson.fromJson(request.body(), Director.class));
-				return response;
+				response.status(200);
+				return response.status();
 			});
 
 			// Delete Director
 			delete("/:id", (request, response) -> {
 				database.deleteDirector(request.params(":id"));
-				return response;
+				response.status(200);
+				return response.status();
 			});
 		});
 
@@ -128,7 +131,7 @@ class RequestHandler {
 				response.type("application/json");
 				database.addMovieToUserList(userID, listIndex, movieID);
 				response.status(200);
-				return response;
+				return response.status();
 			});
 
 			// Add new user.
@@ -180,13 +183,15 @@ class RequestHandler {
 			// Update user.
 			put("/:id", (request, response) -> {
 				database.setUser(gson.fromJson(request.body(), User.class));
-				return response;
+				response.status(200);
+				return response.status();
 			});
 
 			// Delete user.
 			delete("/:id", (request, response) -> {
 				database.deleteUser(request.params(":id"));
-				return response;
+				response.status(200);
+				return response.status();
 			});
 		});
 	}
