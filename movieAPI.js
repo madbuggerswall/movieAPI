@@ -98,7 +98,6 @@ function del(query) {
 function request(type, query) {
 	let xmlHttp = new XMLHttpRequest();
 	let requestURL = url + query;
-  console.log("2 "+ requestURL);
 	xmlHttp.open(type, requestURL, false); // False for synchronous request.
 	xmlHttp.send();
 	return xmlHttp.responseText;
@@ -107,7 +106,6 @@ function request(type, query) {
 function requestSend(type, query, data) {
 	let xmlHttp = new XMLHttpRequest();
 	let requestURL = url + query;
-  console.log("3 "+ requestURL);
 	xmlHttp.open(type, requestURL, false);
 	xmlHttp.send(data);
 	return xmlHttp.responseText;
