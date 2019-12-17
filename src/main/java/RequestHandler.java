@@ -140,11 +140,11 @@ class RequestHandler {
 				if (database.userNameExists(user.username)) {
 					response.status(404);
 					response.body("Username already exists.");
-					return response.body();
+					return response.status();
 				} else {
 					database.addUser(user);
 					response.status(200);
-					return response.body();
+					return response.status();
 				}
 			});
 
@@ -159,12 +159,12 @@ class RequestHandler {
 					} else {
 						response.status(404);
 						response.body("Incorrect password");
-						return response.body();
+						return response.status();
 					}
 				} else {
 					response.status(404);
 					response.body("No such user with username: " + userDTO.username);
-					return response.body();
+					return response.status();
 				}
 			});
 
@@ -176,7 +176,7 @@ class RequestHandler {
 				} else {
 					response.status(404);
 					response.body("User is not logged in.");
-					return response.body();
+					return response.status();
 				}
 			});
 
