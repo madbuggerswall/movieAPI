@@ -155,9 +155,7 @@ class RequestHandler {
 					User user = database.loginUser(userDTO);
 					if (user != null) {
 						response.status(200);
-						response.body(gson.toJson(user));
-						response.type("application/json");
-						return response;
+						return gson.toJson(user);
 					} else {
 						response.status(404);
 						response.body("Incorrect password");
