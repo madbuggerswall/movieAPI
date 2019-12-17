@@ -3,5 +3,6 @@ public class CustomUser {
 	User user;
 	CustomUser(int status, User user) {
 		this.status = status;
+		this.user = user;
 	}
 }
