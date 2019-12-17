@@ -90,6 +90,14 @@ class Database {
 		dbManager.setDocument(directors, director);
 	}
 
+	public void setDirector(DirectorDTO directorDTO) {
+		Director director = getDirector(directorDTO.getID());
+		director.name = directorDTO.name;
+		director.surname = directorDTO.surname;
+		director.birthDate = directorDTO.birthDate;
+		dbManager.setDocument(directors, director);
+	}
+
 	// User
 	public void addUser(User user) {
 		user.password = DigestUtils.sha256Hex(user.password);

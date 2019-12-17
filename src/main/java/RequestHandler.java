@@ -95,7 +95,7 @@ class RequestHandler {
 
 			// Update Director
 			put("/:id", (request, response) -> {
-				database.setDirector(gson.fromJson(request.body(), Director.class));
+				database.setDirector(gson.fromJson(request.body(), DirectorDTO.class));
 				response.status(200);
 				return response.status();
 			});
