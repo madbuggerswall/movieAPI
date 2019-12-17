@@ -157,7 +157,6 @@ class RequestHandler {
 					if (user != null) {
 						response.status(200);
 						response.type("application/json");
-						response.body(gson.toJson(user));
 						return gson.toJson(new CustomUser(response.status(), user));
 					} else {
 						response.status(404);
