@@ -63,7 +63,7 @@ class DatabaseManager {
 				.withCollectionPath(collection.getPath())
 				.build();
 			Logger.logOperation(logEntry);
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -176,7 +176,7 @@ class DatabaseManager {
 				.withCollectionPath(collection.getPath())
 				.build();
 			Logger.logOperation(logEntry);
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -197,7 +197,7 @@ class DatabaseManager {
 		try {
 			googleCredentials = GoogleCredentials.fromStream(credentialsStream);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return googleCredentials;
 	}
@@ -208,7 +208,7 @@ class DatabaseManager {
 		try {
 			credentialsStream = new FileInputStream(filePath);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			System.exit(0);
 		}
 		return credentialsStream;

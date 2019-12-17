@@ -65,7 +65,6 @@ class RequestHandler {
 
 			// Delete movie.
 			delete("/:id", (request, response) -> {
-				System.out.println("delete");
 				database.deleteMovie(request.params(":id"));
 				response.status(200);
 				return response.status();
@@ -136,7 +135,6 @@ class RequestHandler {
 
 			// Add new user.
 			post("", (request, response) -> {
-				System.out.println("USER***");
 				User user = gson.fromJson(request.body(), User.class);
 				if (database.userNameExists(user.username)) {
 					response.status(404);
@@ -151,13 +149,13 @@ class RequestHandler {
 
 			// Login user.
 			post("/login", (request, response) -> {
-				UserDTO userDTO = gson.fromJson(request.body(), UserDTO.class); //response.raw()+response.body();
+				UserDTO userDTO = gson.fromJson(request.body(), UserDTO.class);
 				if (database.userNameExists(userDTO.username)) {
 					User user = database.loginUser(userDTO);
 					if (user != null) {
 						response.status(200);
 						response.type("application/json");
-						return gson.toJson(new CustomUser(response.status(), user));
+						return gson.toJson(new LoginResponse(response.status(), user));
 					} else {
 						response.status(404);
 						response.body("Incorrect password");

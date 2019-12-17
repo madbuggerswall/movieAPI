@@ -13,7 +13,7 @@ public class User extends Data {
 
 	public User() {
 		lists = new ArrayList<MovieList>();
-		role = "user";
+		role = "User";
 	}
 
 	public User(String username) {
