@@ -155,6 +155,7 @@ class RequestHandler {
 					User user = database.loginUser(userDTO);
 					if (user != null) {
 						response.status(200);
+						response.type("application/json");
 						return gson.toJson(user);
 					} else {
 						response.status(404);
