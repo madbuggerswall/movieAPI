@@ -43,3 +43,9 @@ public class Movie extends Data {
 		return director;
 	}
 }
+
+class NullMovie extends Movie{
+	public NullMovie(){
+		super("TBA", 0, 0, new NullDirector());
+	}
+}

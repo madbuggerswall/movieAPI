@@ -36,6 +36,11 @@ class Database {
 	public void addMovie(Movie movie) {
 		dbManager.addDocument(movies, movie);
 		Director director = getDirector(movie.getDirector().getID());
+		if(director.getMovies().size() == 1){
+			if(director.getMovies().get(0).getID() == null){
+				director.getMovies().remove(0);
+			}
+		}
 		director.addMovie(movie);
 		setDirector(director);
 	}
@@ -47,6 +52,9 @@ class Database {
 		Director director = movie.getDirector();
 		if (director.id != null) {
 			director.removeMovie(movie);
+			if(director.getMovies().isEmpty()){
+				director.addMovie(new NullMovie());
+			}
 			setDirector(director);
 		}
 	}
