@@ -13,6 +13,10 @@ public class User extends Data {
 
 	public User() {
 		lists = new ArrayList<MovieList>();
+		MovieList watched = new MovieList("Watched");
+		MovieList favorites = new MovieList("Favorites");
+		addList(watched);
+		addList(favorites);
 		role = "User";
 	}
 

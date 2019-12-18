@@ -149,6 +149,14 @@ class RequestHandler {
 				}
 			});
 
+			post("/addList/:userID", (request, response) -> {
+				String userID = request.params(":userID");
+				String listName = request.body();
+				database.addMovieList(userID, listName);
+				response.status(200);
+				return response.status();
+			});
+
 			// Login user.
 			post("/login", (request, response) -> {
 				UserDTO userDTO = gson.fromJson(request.body(), UserDTO.class);

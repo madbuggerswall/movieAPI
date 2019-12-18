@@ -42,10 +42,13 @@ class Database {
 
 	public void deleteMovie(String docID) {
 		Movie movie = getMovie(docID);
-		Director director = movie.getDirector();
-		director.removeMovie(movie);
 		dbManager.deleteDocument(movies, docID);
-		setDirector(director);
+
+		Director director = movie.getDirector();
+		if (director.id != null) {
+			director.removeMovie(movie);
+			setDirector(director);
+		}
 	}
 
 	public Movie getMovie(String docID) {
@@ -102,6 +105,13 @@ class Database {
 	public void addUser(User user) {
 		user.password = DigestUtils.sha256Hex(user.password);
 		dbManager.addDocument(users, user);
+	}
+
+	public void addMovieList(String userID, String listName) {
+		MovieList movieList = new MovieList(listName);
+		User user = getUser(userID);
+		user.addList(movieList);
+		setUser(user);
 	}
 
 	public void addMovieToUserList(String userID, int listIndex, String movieID) {
