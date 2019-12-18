@@ -58,7 +58,9 @@ class RequestHandler {
 
 			// Update movie.
 			put("/:id", (request, response) -> {
-				database.setMovie(gson.fromJson(request.body(), Movie.class));
+				Movie movie = gson.fromJson(request.body(),Movie.class);
+				movie.setID(request.params(":id"));
+				database.setMovie(movie);
 				response.status(200);
 				return response.status();
 			});
@@ -192,7 +194,9 @@ class RequestHandler {
 
 			// Update user.
 			put("/:id", (request, response) -> {
-				database.setUser(gson.fromJson(request.body(), User.class));
+				User user = gson.fromJson(request.body(), User.class);
+				user.id = request.params(":id");
+				database.setUser(user);
 				response.status(200);
 				return response.status();
 			});
