@@ -29,8 +29,4 @@ public class MovieList {
 	public void removeMovie(Movie movie) {
 		movies.remove(movie);
 	}
-
-	void sortList() {
-
-	}
 }

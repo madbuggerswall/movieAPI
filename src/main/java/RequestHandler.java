@@ -126,6 +126,15 @@ class RequestHandler {
 				return database.getUser(request.params(":id")).toJSON();
 			});
 
+			// Get user list
+			get("/:userID/:listIndex", (request, response) -> {
+				String userID = request.params(":userID");
+				int listIndex = Integer.parseInt(request.params(":listIndex"));
+				User user = database.getUser(userID);
+				response.type("application/json");
+				return gson.toJson(user.getList(listIndex));
+			});
+
 			// Add movie to user list.
 			get("/:userID/:listIndex/:movieID", (request, response) -> {
 				String userID = request.params(":userID");
